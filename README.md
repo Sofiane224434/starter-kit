@@ -1,6 +1,44 @@
 # Starter Kit - Application Fullstack
 
-## 📋 Description
+## � Démarrage Rapide
+
+### Prérequis
+- Node.js (v16 ou supérieur)
+- MySQL
+- npm ou yarn
+
+### Installation
+
+```bash
+# Installation Backend
+cd backend
+npm install
+# Créer un fichier .env avec vos configurations
+# DB_HOST=localhost
+# DB_USER=root
+# DB_PASSWORD=
+# DB_NAME=starter_kit
+# JWT_SECRET=votre_secret_jwt
+# PORT=5000
+npm run dev
+
+# Installation Frontend (dans un nouveau terminal)
+cd frontend
+npm install
+npm run dev
+
+#Copier coller les variables d'environnement
+cp /backend/.env.example /backend/.env cp /frontend/.env.example /frontend/.env
+```
+
+### Lancement
+
+- **Backend** : `http://localhost:5000`
+- **Frontend** : `http://localhost:5173`
+
+---
+
+## �📋 Description
 
 Projet fullstack moderne avec architecture découplée, comprenant un backend API REST et un frontend React. L'application propose un système d'authentification complet avec gestion des utilisateurs.
 
