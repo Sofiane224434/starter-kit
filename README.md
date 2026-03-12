@@ -13,6 +13,7 @@ Un starter kit moderne et complet pour développer rapidement des applications w
 - [Fonctionnalités](#-fonctionnalités)
 - [Architecture](#️-architecture-du-projet)
 - [Technologies](#-technologies)
+- [Shared (Zod)](#-shared--validation-partagée-avec-zod)
 - [API Endpoints](#-api-endpoints)
 - [Scripts Disponibles](#️-scripts-disponibles)
 - [Bonnes Pratiques](#-bonnes-pratiques)
@@ -75,6 +76,11 @@ cp /backend/.env.example /backend/.env cp /frontend/.env.example /frontend/.env
 - ✅ Gestion des erreurs centralisée
 - ✅ CORS configuré pour le développement
 
+### Validation Partagée
+- ✅ Schémas de validation **Zod** mutualisés entre frontend et backend
+- ✅ Validation typée et cohérente sur l'ensemble de l'application
+- ✅ Source unique de vérité pour les règles de validation des formulaires
+
 ### Développement
 - ✅ Hot reload (Frontend et Backend)
 - ✅ Variables d'environnement (.env)
@@ -105,6 +111,11 @@ cp /backend/.env.example /backend/.env cp /frontend/.env.example /frontend/.env
 | **Axios** | Client HTTP pour les appels API | - |
 | **ESLint** | Linter pour maintenir la qualité du code | - |
 
+### Partagé (Backend + Frontend)
+| Technologie | Description | Version |
+|-------------|-------------|---------|
+| **Zod** | Validation de schémas TypeScript-first | 3.x |
+
 ### Outils de Développement
 - **npm/yarn** : Gestionnaires de paquets
 - **Nodemon** : Auto-restart du serveur backend
@@ -120,6 +131,7 @@ Le projet est organisé en deux parties principales :
 starter-kit/
 ├── backend/          # API REST Node.js
 ├── frontend/         # Application React
+├── shared/           # Schémas de validation Zod partagés
 └── README.md
 ```
 
@@ -268,7 +280,59 @@ VITE_API_URL=http://localhost:5000
 
 ---
 
-## 🔐 Système d'Authentification
+## � Shared — Validation Partagée avec Zod
+
+Le dossier `shared/` contient les schémas de validation **Zod** utilisés à la fois par le backend et le frontend, garantissant une cohérence totale des règles de validation.
+
+### Structure du Dossier
+
+```
+shared/
+└── schemas.js    # Schémas Zod partagés (login, register, etc.)
+```
+
+### Schémas Disponibles
+
+| Schéma | Champs validés | Utilisé par |
+|--------|---------------|-------------|
+| `loginSchema` | `email` (email valide), `password` (min. 6 caractères) | Login form + backend route |
+
+### Exemple d'Utilisation
+
+**Dans le backend** (validation de la requête) :
+```js
+import { loginSchema } from '../../shared/schemas.js';
+
+const result = loginSchema.safeParse(req.body);
+if (!result.success) {
+  return res.status(400).json({ errors: result.error.flatten() });
+}
+```
+
+**Dans le frontend** (validation du formulaire) :
+```js
+import { loginSchema } from '../../../shared/schemas.js';
+
+const result = loginSchema.safeParse({ email, password });
+if (!result.success) {
+  // Afficher les erreurs de validation
+}
+```
+
+### Ajouter un Schéma
+
+Éditez [shared/schemas.js](shared/schemas.js) et exportez un nouveau schéma Zod :
+```js
+export const registerSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+```
+
+---
+
+## �🔐 Système d'Authentification
 
 ### Flow d'Authentification
 
@@ -434,7 +498,7 @@ Authorization: Bearer <votre_token_jwt>
   "bcryptjs": "^2.4.3",           // Hashage mots de passe
   "dotenv": "^16.0.0",            // Variables d'environnement
   "cors": "^2.8.5",               // Middleware CORS
-  "express-validator": "^7.0.0"   // Validation des données
+  "zod": "^3.0.0"                 // Validation des schémas partagés
 }
 ```
 
@@ -445,7 +509,8 @@ Authorization: Bearer <votre_token_jwt>
   "react": "^18.2.0",             // Bibliothèque UI
   "react-dom": "^18.2.0",         // Rendu React pour le web
   "react-router-dom": "^6.8.0",   // Routing
-  "axios": "^1.3.0"               // Client HTTP
+  "axios": "^1.3.0",              // Client HTTP
+  "zod": "^3.0.0"                 // Validation des schémas partagés
 }
 ```
 
@@ -472,7 +537,7 @@ Authorization: Bearer <votre_token_jwt>
 ### Sécurité
 - ✅ **Hashage sécurisé** : Bcrypt pour les mots de passe
 - ✅ **JWT tokens** : Authentification stateless et sécurisée
-- ✅ **Validation** : Vérification des données côté serveur
+- ✅ **Validation Zod** : Schémas partagés pour une validation typée et cohérente
 - ✅ **CORS configuré** : Protection contre les requêtes non autorisées
 - ✅ **Variables d'environnement** : Secrets jamais commités dans le code
 
@@ -586,6 +651,7 @@ Nous suivons les [Conventional Commits](https://www.conventionalcommits.org/) :
 - [Vite](https://vitejs.dev/) - Documentation Vite
 - [React Router](https://reactrouter.com/) - Documentation React Router
 - [MySQL](https://dev.mysql.com/doc/) - Documentation MySQL
+- [Zod](https://zod.dev/) - Documentation Zod
 
 ### Tutoriels Recommandés
 - [JWT Authentication Best Practices](https://jwt.io/introduction)
