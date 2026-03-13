@@ -8,6 +8,13 @@ const { execSync } = require("node:child_process");
 // Garde-fou : évite la boucle infinie si ce commit vient lui-même d'un sync
 if (process.env.SYNC_IN_PROGRESS === "1") process.exit(0);
 
+// Empêche GCM d'ouvrir un popup interactif lors des push en sous-process
+const noPromptEnv = {
+  ...process.env,
+  GCM_INTERACTIVE: "never",
+  GIT_TERMINAL_PROMPT: "0",
+};
+
 // repo root = dossier parent de .githooks/
 const root = path.resolve(__dirname, "..");
 const cfgPath = path.join(root, ".sync-config.json");
@@ -65,9 +72,9 @@ if (synced === 0) {
 
 // Push du repo source (toujours, qu'il y ait eu sync ou non)
 try {
-  execSync("git push origin HEAD", { cwd: root, stdio: "inherit" });
+  execSync("git push origin HEAD", { cwd: root, stdio: "inherit", env: noPromptEnv });
 } catch (e) {
-  console.error(`[sync] push source \u00e9chou\u00e9 : ${e.message}`);
+  console.error(`[sync] push source échoué : ${e.message}`);
 }
 
 if (synced === 0) process.exit(0);
@@ -90,10 +97,10 @@ for (const [repoRoot, files] of repoFiles) {
     if (!hasStagedChanges) continue;
     execSync('git commit -m "sync: auto"', {
       cwd: repoRoot,
-      env: { ...process.env, SYNC_IN_PROGRESS: "1" },
+      env: { ...noPromptEnv, SYNC_IN_PROGRESS: "1" },
       stdio: "inherit",
     });
-    execSync("git push origin HEAD", { cwd: repoRoot, stdio: "inherit" });
+    execSync("git push origin HEAD", { cwd: repoRoot, stdio: "inherit", env: noPromptEnv });
     console.log(`[sync] pushed → ${repoRoot}`);
   } catch (e) {
     console.error(`[sync] commit/push échoué pour ${repoRoot} : ${e.message}`);
