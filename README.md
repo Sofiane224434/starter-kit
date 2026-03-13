@@ -315,6 +315,7 @@ await sendCustomEmail({
 
 | Commande | Rôle |
 |----------|------|
+| `npm run prepare` | `node -e "try{require('child_process').execSync('git config c…` |
 | `npm run dev` | `concurrently "npm run dev:backend" "npm run dev:frontend" "n…` |
 | `npm run dev:backend` | `cd backend && npm run dev` |
 | `npm run dev:frontend` | `cd frontend && npm run dev` |
