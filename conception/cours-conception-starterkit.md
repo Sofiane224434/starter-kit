@@ -265,4 +265,3 @@ Regle d or:
 
 <!-- test-auto-push -->
 
-<!-- test-final -->
