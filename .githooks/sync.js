@@ -76,7 +76,7 @@ for (const [repoRoot, files] of repoFiles) {
   try {
     for (const f of files) {
       try {
-        execSync(`git add "${f}"`, { cwd: repoRoot });
+        execSync(`git add "${f}"`, { cwd: repoRoot, stdio: "pipe" });
       } catch (_) {
         // fichier gitignoré ou inexistant dans ce repo, on passe
       }
