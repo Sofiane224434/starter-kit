@@ -61,15 +61,16 @@ for (const entry of entries) {
 
 if (synced === 0) {
   console.log("[sync] rien à synchroniser");
-  process.exit(0);
 }
 
-// Push du repo source
+// Push du repo source (toujours, qu'il y ait eu sync ou non)
 try {
   execSync("git push origin HEAD", { cwd: root, stdio: "inherit" });
 } catch (e) {
-  console.error(`[sync] push source échoué : ${e.message}`);
+  console.error(`[sync] push source \u00e9chou\u00e9 : ${e.message}`);
 }
+
+if (synced === 0) process.exit(0);
 
 // Commit + push dans chaque repo cible
 for (const [repoRoot, files] of repoFiles) {
