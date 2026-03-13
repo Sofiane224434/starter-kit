@@ -13,10 +13,6 @@ const noPromptEnv = {
   ...process.env,
   GCM_INTERACTIVE: "never",
   GIT_TERMINAL_PROMPT: "0",
-  // Indique le compte GitHub à utiliser pour éviter le sélecteur de compte
-  GIT_CONFIG_COUNT: "1",
-  GIT_CONFIG_KEY_0: "credential.username",
-  GIT_CONFIG_VALUE_0: "Sofiane224434",
 };
 
 // repo root = dossier parent de .githooks/
