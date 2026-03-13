@@ -1,0 +1,16 @@
+{
+  "sync": [
+    {
+      "from": "conception/cours-conception-starterkit.md",
+      "to": [
+        "../starter-kit-private-context-template/cours-conception-starterkit.md"
+      ]
+    },
+    {
+      "from": "conception/contexte-projets-prive.md",
+      "to": [
+        "../starter-kit-private-context-template/contexte-projets-prive.md"
+      ]
+    }
+  ]
+}
