@@ -16,8 +16,21 @@ const noPromptEnv = {
 const root = path.resolve(__dirname, "..");
 const cfgPath = path.join(root, ".sync", "config.json");
 
+// Lire le chemin du hub depuis package.json
+let registryPath = "";
+try {
+  const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
+  const syncHub = pkg.syncHub || "";
+  if (syncHub) registryPath = path.join(path.resolve(root, syncHub), "projects.json");
+} catch (_) {}
+
+if (!registryPath) {
+  console.log("[sync] 'syncHub' manquant dans package.json. Lance: npm run sync:connect");
+  process.exit(0);
+}
+
 if (!fs.existsSync(cfgPath)) {
-  console.log("[sync] config manquante (.sync/config.json). Lance: npm run sync:configure");
+  console.log("[sync] config manquante (.sync/config.json). Lance: npm run sync:connect");
   process.exit(0);
 }
 
@@ -29,14 +42,35 @@ try {
   process.exit(0);
 }
 
-const targetRepo = (cfg.targetRepo || "").trim();
 const entries = Array.isArray(cfg.entries) ? cfg.entries : [];
 
-if (!targetRepo || targetRepo.includes("{{SYNC_TARGET}}")) {
-  console.log("[sync] cible non configuree. Lance: npm run sync:configure");
+if (!entries.length) {
+  console.log("[sync] aucun fichier a synchroniser. Configure: npm run sync:center");
+  // Push la source quand meme
+  try {
+    execSync("git push origin HEAD", { cwd: root, stdio: "inherit", env: noPromptEnv });
+  } catch (_) {}
   process.exit(0);
 }
 
+// Lire tous les projets connectés
+let allProjects = [];
+try {
+  const reg = JSON.parse(fs.readFileSync(registryPath, "utf8"));
+  allProjects = (Array.isArray(reg.projects) ? reg.projects : [])
+    .map((p) => path.resolve(String(p || "")))
+    .filter((p) => p !== root && fs.existsSync(path.join(p, ".git")));
+} catch (_) {}
+
+if (!allProjects.length) {
+  console.log("[sync] aucun autre projet connecté dans ~/.sync-center/projects.json");
+  try {
+    execSync("git push origin HEAD", { cwd: root, stdio: "inherit", env: noPromptEnv });
+  } catch (_) {}
+  process.exit(0);
+}
+
+// Copier chaque entrée vers TOUS les autres projets
 const repoFiles = new Map();
 let synced = 0;
 
@@ -46,32 +80,27 @@ for (const entry of entries) {
   if (!from || !to) continue;
 
   const src = path.resolve(root, from);
-  const dest = path.resolve(root, targetRepo, to);
-  const destDir = path.dirname(dest);
-
   if (!fs.existsSync(src)) continue;
 
-  try {
-    fs.mkdirSync(destDir, { recursive: true });
-    fs.copyFileSync(src, dest);
-    console.log(`[sync] ${from} -> ${targetRepo}/${to}`);
-    synced++;
+  for (const targetProject of allProjects) {
+    const dest = path.resolve(targetProject, to);
+    const destDir = path.dirname(dest);
 
-    let repoRoot;
     try {
-      repoRoot = execSync("git rev-parse --show-toplevel", { cwd: destDir }).toString().trim();
-    } catch (_) {
-      continue;
-    }
+      fs.mkdirSync(destDir, { recursive: true });
+      fs.copyFileSync(src, dest);
+      console.log(`[sync] ${from} -> ${path.basename(targetProject)}/${to}`);
+      synced++;
 
-    if (!repoFiles.has(repoRoot)) repoFiles.set(repoRoot, []);
-    const relPath = path.relative(repoRoot, dest).replace(/\\/g, "/");
-    repoFiles.get(repoRoot).push(relPath);
-  } catch (e) {
-    console.error(`[sync] erreur copie: ${e.message}`);
+      if (!repoFiles.has(targetProject)) repoFiles.set(targetProject, []);
+      repoFiles.get(targetProject).push(to);
+    } catch (e) {
+      console.error(`[sync] erreur copie vers ${path.basename(targetProject)}: ${e.message}`);
+    }
   }
 }
 
+// Push du projet source
 try {
   execSync("git push origin HEAD", { cwd: root, stdio: "inherit", env: noPromptEnv });
 } catch (e) {
@@ -83,13 +112,13 @@ if (synced === 0) {
   process.exit(0);
 }
 
+// Commit + push dans chaque projet cible
 for (const [repoRoot, files] of repoFiles) {
   try {
     for (const f of files) {
       try {
         execSync(`git add "${f}"`, { cwd: repoRoot, stdio: "pipe" });
-      } catch (_) {
-      }
+      } catch (_) {}
     }
 
     const hasStagedChanges = (() => {
@@ -110,8 +139,8 @@ for (const [repoRoot, files] of repoFiles) {
     });
 
     execSync("git push origin HEAD", { cwd: repoRoot, stdio: "inherit", env: noPromptEnv });
-    console.log(`[sync] pushed -> ${repoRoot}`);
+    console.log(`[sync] pushed -> ${path.basename(repoRoot)}`);
   } catch (e) {
-    console.error(`[sync] commit/push echoue pour ${repoRoot}: ${e.message}`);
+    console.error(`[sync] commit/push echoue pour ${path.basename(repoRoot)}: ${e.message}`);
   }
 }

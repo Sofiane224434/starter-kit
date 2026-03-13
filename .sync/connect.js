@@ -2,28 +2,36 @@
 "use strict";
 
 const fs = require("node:fs");
-const os = require("node:os");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
 
-const root = process.cwd();
+const root = path.resolve(__dirname, "..");
 const openStudio = process.argv.includes("--open");
 
-const centerDir = path.join(os.homedir(), ".sync-center");
-const registryPath = path.join(centerDir, "projects.json");
-const appServerPath = path.join(centerDir, "hub-server.js");
-const appUiPath = path.join(centerDir, "hub-ui.html");
-
-const srcServerPath = path.join(root, ".sync", "hub-server.js");
-const srcUiPath = path.join(root, ".sync", "hub-ui.html");
-
-function parseJson(text, fallback) {
-  try {
-    return JSON.parse(text);
-  } catch (_) {
-    return fallback;
-  }
+// Lire le chemin du hub depuis package.json
+let syncHub = "";
+try {
+  const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
+  syncHub = pkg.syncHub || "";
+} catch (e) {
+  console.error("[sync-connect] Impossible de lire package.json:", e.message);
+  process.exit(1);
 }
+
+if (!syncHub) {
+  console.error('[sync-connect] Ajoute "syncHub": "<chemin>" dans package.json pour pointer vers le repo sync-studio.');
+  process.exit(1);
+}
+
+const hubPath = path.resolve(root, syncHub);
+
+if (!fs.existsSync(hubPath)) {
+  console.error(`[sync-connect] Hub introuvable: ${hubPath}`);
+  console.error("[sync-connect] Clone le repo sync-studio et ajuste le chemin 'syncHub' dans package.json.");
+  process.exit(1);
+}
+
+const registryPath = path.join(hubPath, "projects.json");
 
 function isCompatibleRepo(repoPath) {
   return fs.existsSync(path.join(repoPath, ".git")) && fs.existsSync(path.join(repoPath, ".sync", "config.template.json"));
@@ -34,38 +42,42 @@ if (!isCompatibleRepo(root)) {
   process.exit(1);
 }
 
-if (!fs.existsSync(srcServerPath) || !fs.existsSync(srcUiPath)) {
-  console.error("[sync-connect] Fichiers hub manquants dans .sync/.");
-  process.exit(1);
+// Enregistrer ce projet dans le hub
+let registry = { projects: [] };
+try {
+  registry = JSON.parse(fs.readFileSync(registryPath, "utf8"));
+  if (!Array.isArray(registry.projects)) registry.projects = [];
+} catch (_) {}
+
+const normalizedRoot = path.resolve(root);
+const alreadyRegistered = registry.projects.map((p) => path.resolve(String(p || ""))).includes(normalizedRoot);
+
+if (!alreadyRegistered) {
+  registry.projects.push(normalizedRoot);
+  fs.writeFileSync(registryPath, `${JSON.stringify(registry, null, 2)}\n`);
+  console.log(`[sync-connect] Projet connecté: ${path.basename(normalizedRoot)}`);
+} else {
+  console.log(`[sync-connect] Déjà connecté: ${path.basename(normalizedRoot)}`);
 }
 
-fs.mkdirSync(centerDir, { recursive: true });
-fs.copyFileSync(srcServerPath, appServerPath);
-fs.copyFileSync(srcUiPath, appUiPath);
-
-const registry = fs.existsSync(registryPath)
-  ? parseJson(fs.readFileSync(registryPath, "utf8"), { projects: [] })
-  : { projects: [] };
-
-const projects = Array.isArray(registry.projects) ? registry.projects : [];
-const normalizedRoot = path.resolve(root);
-const next = projects.filter((p) => typeof p === "string" && p && p !== normalizedRoot);
-next.push(normalizedRoot);
-
-const unique = [...new Set(next.map((p) => path.resolve(p)))].filter((p) => isCompatibleRepo(p));
-fs.writeFileSync(registryPath, `${JSON.stringify({ projects: unique }, null, 2)}\n`);
-
-console.log(`[sync-connect] Projet connecté: ${path.basename(normalizedRoot)}`);
-console.log(`[sync-connect] Registry: ${registryPath}`);
+console.log(`[sync-connect] Hub: ${hubPath}`);
 
 if (!openStudio) {
-  console.log("[sync-connect] Ouvre l'app: npm run sync:configure");
+  console.log("[sync-connect] Lance l'app: npm run sync:center");
   process.exit(0);
 }
 
-const child = spawn("node", [appServerPath, "--current", normalizedRoot], {
+// Démarrer le serveur hub
+const serverPath = path.join(hubPath, "server.js");
+if (!fs.existsSync(serverPath)) {
+  console.error(`[sync-connect] server.js introuvable dans ${hubPath}`);
+  process.exit(1);
+}
+
+console.log("[sync-connect] Démarrage Sync Studio...");
+const child = spawn(process.execPath, [serverPath, "--current", normalizedRoot], {
   stdio: "inherit",
-  cwd: centerDir,
+  cwd: hubPath,
   env: process.env,
 });
 
