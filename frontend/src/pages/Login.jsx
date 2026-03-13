@@ -1,6 +1,7 @@
 // pages/Login.jsx
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { useAuth } from "../hooks/useAuth.js";
 
 function Login() {
@@ -9,6 +10,7 @@ function Login() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/dashboard";
@@ -21,7 +23,7 @@ function Login() {
             await login(email, password);
             navigate(from, { replace: true });
         } catch (err) {
-            setError(err.message || "Erreur de connexion");
+            setError(err.message || t('errors.login_error'));
         } finally {
             setLoading(false);
         }
@@ -30,13 +32,13 @@ function Login() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                <h1 className="text-2xl font-bold mb-6 text-center">Connexion</h1>
-                
+                <h1 className="text-2xl font-bold mb-6 text-center">{t('login.title')}</h1>
+
                 {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-                
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium mb-1">Email</label>
+                        <label className="block text-sm font-medium mb-1">{t('login.email')}</label>
                         <input
                             type="email"
                             value={email}
@@ -45,9 +47,9 @@ function Login() {
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
-                    
+
                     <div>
-                        <label className="block text-sm font-medium mb-1">Mot de passe</label>
+                        <label className="block text-sm font-medium mb-1">{t('login.password')}</label>
                         <input
                             type="password"
                             value={password}
@@ -56,18 +58,18 @@ function Login() {
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
-                    
-                    <button 
-                        type="submit" 
+
+                    <button
+                        type="submit"
                         disabled={loading}
                         className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-medium py-2 rounded-lg transition"
                     >
-                        {loading ? "Connexion..." : "Se connecter"}
+                        {loading ? t('login.loading') : t('login.submit')}
                     </button>
                 </form>
-                
+
                 <p className="text-center mt-4 text-sm">
-                    Pas de compte ? <Link to="/register" className="text-blue-500 hover:underline">S'inscrire</Link>
+                    {t('login.no_account')} <Link to="/register" className="text-blue-500 hover:underline">{t('login.register_link')}</Link>
                 </p>
             </div>
         </div>

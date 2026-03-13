@@ -34,3 +34,10 @@ body: JSON.stringify({ email, password })
 }),
 getProfile: () => fetchAPI('/auth/me')
 }
+
+export const emailService = {
+send: (payload) => fetchAPI('/email/send', {
+method: 'POST',
+body: JSON.stringify(payload)
+})
+}

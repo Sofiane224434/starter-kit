@@ -1,6 +1,7 @@
 // pages/Register.jsx
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth.js';
 
 function Register() {
@@ -12,6 +13,7 @@ function Register() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { register } = useAuth();
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -26,11 +28,11 @@ function Register() {
         setError('');
 
         if (formData.password !== formData.confirmPassword) {
-            setError('Les mots de passe ne correspondent pas');
+            setError(t('errors.passwords_mismatch'));
             return;
         }
         if (formData.password.length < 6) {
-            setError('Le mot de passe doit contenir au moins 6 caractères');
+            setError(t('errors.password_too_short'));
             return;
         }
 
@@ -42,7 +44,7 @@ function Register() {
             });
             navigate('/dashboard');
         } catch (err) {
-            setError(err.message || 'Erreur lors de l\'inscription');
+            setError(err.message || t('errors.register_error'));
         } finally {
             setLoading(false);
         }
@@ -51,13 +53,13 @@ function Register() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Créer un compte</h1>
+                <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">{t('register.title')}</h1>
 
                 {error && <p className="text-red-500 text-sm mb-4 p-3 bg-red-50 rounded">{error}</p>}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">{t('register.email')}</label>
                         <input
                             type="email"
                             name="email"
@@ -69,7 +71,7 @@ function Register() {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">{t('register.password')}</label>
                         <input
                             type="password"
                             name="password"
@@ -81,7 +83,7 @@ function Register() {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Confirmer le mot de passe</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">{t('register.confirm_password')}</label>
                         <input
                             type="password"
                             name="confirmPassword"
@@ -97,12 +99,12 @@ function Register() {
                         disabled={loading}
                         className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-medium py-2 rounded-lg transition duration-200"
                     >
-                        {loading ? 'Inscription...' : 'S\'inscrire'}
+                        {loading ? t('register.loading') : t('register.submit')}
                     </button>
                 </form>
 
                 <p className="text-center text-sm text-gray-600 mt-6">
-                    Déjà un compte ? <Link to="/login" className="text-blue-500 hover:underline font-medium">Se connecter</Link>
+                    {t('register.already_account')} <Link to="/login" className="text-blue-500 hover:underline font-medium">{t('register.login_link')}</Link>
                 </p>
             </div>
         </div>
