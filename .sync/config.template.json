@@ -1,0 +1,13 @@
+{
+  "targetRepo": "{{SYNC_TARGET}}",
+  "entries": [
+    {
+      "from": "conception/cours-conception-starterkit.md",
+      "to": "cours-conception-starterkit.md"
+    },
+    {
+      "from": "conception/contexte-projets-prive.md",
+      "to": "contexte-projets-prive.md"
+    }
+  ]
+}

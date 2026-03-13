@@ -5,4 +5,4 @@
 /node_modules
 /scripts/.translate-cache.json
 /conception/contexte-projets-prive.md
-/.sync-config.json
+/.sync/config.json
