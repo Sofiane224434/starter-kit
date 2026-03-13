@@ -5,8 +5,10 @@
   },
   "scripts": {
     "prepare": "node -e \"try{require('child_process').execSync('git config core.hooksPath .sync/hooks')}catch(_){}\" && node .sync/configure.js --init",
-    "sync:center": "node .sync/center.js",
-    "sync:configure": "node .sync/configure-web.js",
+    "sync:connect": "node .sync/connect.js",
+    "sync:studio": "node .sync/connect.js --open",
+    "sync:configure": "node .sync/connect.js --open",
+    "sync:center": "node .sync/connect.js --open",
     "sync:configure:cli": "node .sync/configure.js",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run translate:watch\" \"npm run readme:watch\"",
     "dev:backend": "cd backend && npm run dev",

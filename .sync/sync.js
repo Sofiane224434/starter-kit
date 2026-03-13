@@ -49,9 +49,10 @@ for (const entry of entries) {
   const dest = path.resolve(root, targetRepo, to);
   const destDir = path.dirname(dest);
 
-  if (!fs.existsSync(src) || !fs.existsSync(destDir)) continue;
+  if (!fs.existsSync(src)) continue;
 
   try {
+    fs.mkdirSync(destDir, { recursive: true });
     fs.copyFileSync(src, dest);
     console.log(`[sync] ${from} -> ${targetRepo}/${to}`);
     synced++;
