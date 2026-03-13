@@ -261,26 +261,4 @@ Pour chaque nouveau projet:
 Regle d or:
 - Un projet = un dossier VPS = un vhost Nginx = un workflow GitHub Actions.
 
-## 11) Synchroniser ce cours et le contexte partout
-
-Cas d usage:
-- Tu modifies le cours dans starter-kit.
-- Ou tu modifies le contexte dans context-template.
-- Tu veux retrouver le meme contenu dans les deux emplacements.
-
-Commande de synchro ponctuelle (depuis starter-kit):
-
-npm run conception:sync
-
-Commande de synchro continue (watch):
-
-npm run conception:sync:watch
-
-Ce que fait la synchro:
-- cours-conception-starterkit.md est synchronise entre les deux dossiers.
-- contexte-projets-prive.md est synchronise entre les deux dossiers.
-- Le fichier le plus recent gagne, puis il est copie vers l autre emplacement.
-
-Conseil:
-- Lancer le mode watch pendant une session d edition pour que les changements se propagent automatiquement.
 
