@@ -77,6 +77,12 @@ for (const [repoRoot, files] of repoFiles) {
     for (const f of files) {
       execSync(`git add "${f}"`, { cwd: repoRoot, stdio: "inherit" });
     }
+    // Rien à committer si les fichiers étaient déjà identiques
+    const hasStagedChanges = (() => {
+      try { execSync("git diff --cached --quiet", { cwd: repoRoot }); return false; }
+      catch (_) { return true; }
+    })();
+    if (!hasStagedChanges) continue;
     execSync('git commit -m "sync: auto"', {
       cwd: repoRoot,
       env: { ...process.env, SYNC_IN_PROGRESS: "1" },
