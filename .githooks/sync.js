@@ -3,6 +3,10 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { execSync } = require("node:child_process");
+
+// Garde-fou : évite la boucle infinie si ce commit vient lui-même d'un sync
+if (process.env.SYNC_IN_PROGRESS === "1") process.exit(0);
 
 // repo root = dossier parent de .githooks/
 const root = path.resolve(__dirname, "..");
@@ -19,6 +23,9 @@ try {
 }
 
 const entries = cfg.sync ?? [];
+
+// repoRoot -> [chemin relatif du fichier copié]
+const repoFiles = new Map();
 let synced = 0;
 
 for (const entry of entries) {
@@ -29,19 +36,55 @@ for (const entry of entries) {
     const dest = path.resolve(root, target);
     const destDir = path.dirname(dest);
 
-    // Si le dossier cible n'existe pas (repo pas cloné sur cette machine), on passe
     if (!fs.existsSync(destDir)) continue;
 
     try {
       fs.copyFileSync(src, dest);
       console.log(`[sync] ${entry.from} → ${target}`);
       synced++;
+
+      let repoRoot;
+      try {
+        repoRoot = execSync("git rev-parse --show-toplevel", { cwd: destDir }).toString().trim();
+      } catch (_) {
+        continue;
+      }
+
+      if (!repoFiles.has(repoRoot)) repoFiles.set(repoRoot, []);
+      const relPath = path.relative(repoRoot, dest).replace(/\\/g, "/");
+      repoFiles.get(repoRoot).push(relPath);
     } catch (e) {
-      console.error(`[sync] erreur : ${e.message}`);
+      console.error(`[sync] erreur copie : ${e.message}`);
     }
   }
 }
 
 if (synced === 0) {
   console.log("[sync] rien à synchroniser");
+  process.exit(0);
+}
+
+// Push du repo source
+try {
+  execSync("git push origin HEAD", { cwd: root, stdio: "inherit" });
+} catch (e) {
+  console.error(`[sync] push source échoué : ${e.message}`);
+}
+
+// Commit + push dans chaque repo cible
+for (const [repoRoot, files] of repoFiles) {
+  try {
+    for (const f of files) {
+      execSync(`git add "${f}"`, { cwd: repoRoot, stdio: "inherit" });
+    }
+    execSync('git commit -m "sync: auto"', {
+      cwd: repoRoot,
+      env: { ...process.env, SYNC_IN_PROGRESS: "1" },
+      stdio: "inherit",
+    });
+    execSync("git push origin HEAD", { cwd: repoRoot, stdio: "inherit" });
+    console.log(`[sync] pushed → ${repoRoot}`);
+  } catch (e) {
+    console.error(`[sync] commit/push échoué pour ${repoRoot} : ${e.message}`);
+  }
 }
