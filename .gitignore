@@ -1,8 +1,7 @@
-/backend/node_modules
+﻿/backend/node_modules
 /backend/.env
 /frontend/node_modules
 /frontend/.env
 /node_modules
 /scripts/.translate-cache.json
-/conception/contexte-projets-prive.md
-/.sync/config.json
+/conception/aides/contexte-projets-prive.md

@@ -1,14 +1,11 @@
-{
-  "syncHub": "../sync-studio",
+﻿{
   "devDependencies": {
     "concurrently": "^9.2.1",
-    "deepl-node": "^1.24.0"
+    "deepl-node": "^1.24.0",
+    "sync-studio": "file:../sync-studio"
   },
   "scripts": {
-    "prepare": "node -e \"try{require('child_process').execSync('git config core.hooksPath .sync/hooks')}catch(_){}\"",
-    "sync:connect": "node .sync/connect.js",
-    "sync:center": "node .sync/connect.js --open",
-    "sync:configure:cli": "node .sync/configure.js",
+    "sync": "sync-studio",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run translate:watch\" \"npm run readme:watch\"",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
