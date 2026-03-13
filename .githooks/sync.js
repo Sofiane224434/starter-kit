@@ -75,7 +75,11 @@ try {
 for (const [repoRoot, files] of repoFiles) {
   try {
     for (const f of files) {
-      execSync(`git add "${f}"`, { cwd: repoRoot, stdio: "inherit" });
+      try {
+        execSync(`git add "${f}"`, { cwd: repoRoot });
+      } catch (_) {
+        // fichier gitignoré ou inexistant dans ce repo, on passe
+      }
     }
     // Rien à committer si les fichiers étaient déjà identiques
     const hasStagedChanges = (() => {
