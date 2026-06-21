@@ -47,9 +47,6 @@ cp backend/.env.example backend/.env
 # Initialiser la base de données (PowerShell)
 Get-Content backend/schema.sql | mysql -u root
 
-# Si ta base existe deja, applique aussi la migration poetry
-Get-Content backend/migration-poetry.sql | mysql -u root
-
 # Promouvoir un premier compte admin (adapte l'email)
 mysql -u root -D starter_kit -e "UPDATE users SET role='admin', can_publish=1 WHERE email='admin@poeme.local';"
 
