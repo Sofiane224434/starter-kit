@@ -10,42 +10,16 @@ const User = {
     },
     // Trouver par ID (sans le password)
     async findById(id) {
-        const sql = `
-SELECT id, email, firstname, lastname, role, can_publish AS canPublish, created_at
-FROM users
-WHERE id = ?
-`;
+        const sql = 'SELECT id, email, firstname, lastname, created_at FROM users WHERE id = ?';
         const results = await query(sql, [id]);
         return results[0] || null;
     },
-
-    async listAll() {
-        const sql = `
-SELECT id, email, firstname, lastname, role, can_publish AS canPublish, created_at
-FROM users
-ORDER BY created_at DESC
-`;
-        return query(sql);
-    },
-
-    async setPublishPermission(id, canPublish) {
-        const sql = 'UPDATE users SET can_publish = ? WHERE id = ?';
-        await query(sql, [canPublish ? 1 : 0, id]);
-        return this.findById(id);
-    },
-
-    async setRole(id, role) {
-        const sql = 'UPDATE users SET role = ? WHERE id = ?';
-        await query(sql, [role, id]);
-        return this.findById(id);
-    },
-
     // Créer un utilisateur
     async create({ email, password, firstname = null, lastname = null }) {
         const hashedPassword = await bcrypt.hash(password, 10);
         const sql = `
-INSERT INTO users (email, password, firstname, lastname, role, can_publish)
-VALUES (?, ?, ?, ?, 'user', 0)
+INSERT INTO users (email, password, firstname, lastname)
+VALUES (?, ?, ?, ?)
 `;
         const result = await query(sql, [
             email.toLowerCase(),
@@ -53,7 +27,7 @@ VALUES (?, ?, ?, ?, 'user', 0)
             firstname,
             lastname
         ]);
-        return this.findById(result.insertId);
+        return { id: result.insertId, email, firstname, lastname };
     },
     // Vérifier le mot de passe
     async verifyPassword(plainPassword, hashedPassword) {

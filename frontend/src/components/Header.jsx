@@ -1,7 +1,5 @@
 // components/Header.jsx
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext.jsx';
 
 const languages = [
     { code: 'fr', label: 'FR' },
@@ -10,7 +8,6 @@ const languages = [
 
 function Header() {
     const { t, i18n } = useTranslation();
-    const { user, logout } = useAuth();
     const currentLanguage = (i18n.resolvedLanguage || i18n.language || 'fr').slice(0, 2);
 
     const handleLanguageChange = (event) => {
@@ -18,49 +15,18 @@ function Header() {
     };
 
     return (
-        <header className="sticky top-0 z-20 border-b border-amber-100/15 bg-stone-950/85 text-amber-50 backdrop-blur">
-            <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 md:px-6">
-                <Link to="/" className="text-3xl tracking-wide" aria-label={t('nav.home')}>
+        <header className="poetry-header">
+            <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-5 md:px-6">
+                <a href="#hero" className="poetry-brand" aria-label={t('nav.home')}>
                     {t('site.title')}
-                </Link>
+                </a>
 
-                <nav className="flex items-center gap-4 text-sm font-medium tracking-wide md:gap-6">
-                    <a href="#collection" className="text-amber-100/80 transition hover:text-amber-300">{t('nav.collection')}</a>
-                    <a href="#manifest" className="text-amber-100/80 transition hover:text-amber-300">{t('nav.manifest')}</a>
-                    {user && (
-                        <Link to="/dashboard" className="text-amber-100/80 transition hover:text-amber-300">
-                            Dashboard
-                        </Link>
-                    )}
-                    {user?.role === 'admin' && (
-                        <Link to="/admin" className="text-amber-100/80 transition hover:text-amber-300">
-                            Admin
-                        </Link>
-                    )}
+                <nav className="hidden items-center gap-6 text-sm font-medium tracking-wide md:flex">
+                    <a href="#collection" className="poetry-link">{t('nav.collection')}</a>
+                    <a href="#manifest" className="poetry-link">{t('nav.manifest')}</a>
                 </nav>
 
                 <div className="flex items-center gap-3">
-                    {!user && (
-                        <>
-                            <Link to="/login" className="rounded-full border border-amber-100/30 px-3 py-1.5 text-sm transition hover:border-amber-200 hover:text-amber-300">
-                                Connexion
-                            </Link>
-                            <Link to="/register" className="rounded-full bg-amber-200 px-3 py-1.5 text-sm font-semibold text-stone-900 transition hover:bg-amber-300">
-                                Inscription
-                            </Link>
-                        </>
-                    )}
-
-                    {user && (
-                        <button
-                            type="button"
-                            onClick={logout}
-                            className="rounded-full border border-amber-100/30 px-3 py-1.5 text-sm transition hover:border-amber-200 hover:text-amber-300"
-                        >
-                            Deconnexion
-                        </button>
-                    )}
-
                     <select
                         value={currentLanguage}
                         onChange={handleLanguageChange}

@@ -47,9 +47,6 @@ cp backend/.env.example backend/.env
 # Initialiser la base de données (PowerShell)
 Get-Content backend/schema.sql | mysql -u root
 
-# Promouvoir un premier compte admin (adapte l'email)
-mysql -u root -D starter_kit -e "UPDATE users SET role='admin', can_publish=1 WHERE email='admin@poeme.local';"
-
 # Lancer backend + frontend + watch DeepL
 npm run dev
 
@@ -80,9 +77,6 @@ npm run dev:frontend
 - ✅ **Traduction automatique** FR → EN via DeepL (incrémentale + mode watch)
 - ✅ **Email transactionnel** via Brevo (API backend)
 - ✅ Tailwind CSS v4
-- ✅ Dashboard admin pour autoriser/refuser la publication des utilisateurs
-- ✅ Dashboard auteur pour publier des poèmes (si autorisé)
-- ✅ Likes et commentaires réservés aux comptes connectés
 
 ---
 

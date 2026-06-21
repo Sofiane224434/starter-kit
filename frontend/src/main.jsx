@@ -8,7 +8,6 @@ import { initReactI18next } from 'react-i18next';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import './index.css';
-import { AuthProvider } from './contexts/AuthContext.jsx';
 
 i18n
   .use(HttpBackend)
@@ -28,10 +27,8 @@ i18n
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </AuthProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );

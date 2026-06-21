@@ -1,22 +1,121 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap");
 @import "tailwindcss";
 
-@layer base {
-	html,
-	body,
-	#root {
-		min-height: 100%;
-	}
+:root {
+	--ink: #0f172a;
+	--paper: #f7f2e8;
+	--gold: #f4d49a;
+	--wine: #501421;
+	--night: #0b0b12;
+}
 
-	body {
-		margin: 0;
-		font-family: "Space Grotesk", sans-serif;
-	}
+* {
+	box-sizing: border-box;
+}
 
-	h1,
-	h2,
-	h3 {
-		font-family: "Cormorant Garamond", serif;
-		letter-spacing: 0.02em;
+html,
+body,
+#root {
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	font-family: "Space Grotesk", sans-serif;
+	color: var(--paper);
+	background:
+		radial-gradient(circle at 18% 22%, rgba(244, 212, 154, 0.2), transparent 36%),
+		radial-gradient(circle at 84% 16%, rgba(213, 102, 95, 0.18), transparent 34%),
+		linear-gradient(120deg, #110f19 0%, #1f1730 45%, #2d1831 100%);
+}
+
+.poetry-page {
+	position: relative;
+}
+
+.poetry-page::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background-image: linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+	background-size: 36px 36px;
+	-webkit-mask-image: radial-gradient(circle at 30% 30%, black 20%, transparent 85%);
+	mask-image: radial-gradient(circle at 30% 30%, black 20%, transparent 85%);
+	opacity: 0.35;
+}
+
+.poetry-header {
+	position: sticky;
+	top: 0;
+	z-index: 20;
+	-webkit-backdrop-filter: blur(8px);
+	backdrop-filter: blur(8px);
+	background: linear-gradient(to bottom, rgba(11, 11, 18, 0.8), rgba(11, 11, 18, 0.35));
+	border-bottom: 1px solid rgba(255, 243, 214, 0.12);
+}
+
+.poetry-brand {
+	font-family: "Cormorant Garamond", serif;
+	font-size: 1.9rem;
+	color: var(--paper);
+	text-decoration: none;
+	letter-spacing: 0.06em;
+}
+
+.poetry-link {
+	color: rgba(247, 242, 232, 0.8);
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.poetry-link:hover {
+	color: var(--gold);
+}
+
+.poetry-title,
+h1,
+h2,
+h3 {
+	font-family: "Cormorant Garamond", serif;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+.poem-card {
+	border: 1px solid rgba(244, 212, 154, 0.2);
+	border-radius: 1.1rem;
+	padding: 1.4rem;
+	background: linear-gradient(180deg, rgba(26, 20, 39, 0.88), rgba(18, 14, 26, 0.9));
+	box-shadow: 0 12px 26px rgba(5, 4, 11, 0.3);
+	animation: riseFade 500ms ease both;
+}
+
+.poem-card-featured {
+	background: linear-gradient(135deg, rgba(80, 20, 33, 0.85), rgba(25, 17, 37, 0.88));
+	border-color: rgba(244, 212, 154, 0.4);
+}
+
+.manifest-card {
+	border: 1px dashed rgba(244, 212, 154, 0.45);
+	border-radius: 1.2rem;
+	padding: 1.5rem;
+	background: rgba(14, 10, 22, 0.56);
+}
+
+@keyframes riseFade {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (max-width: 640px) {
+	.poetry-brand {
+		font-size: 1.5rem;
 	}
 }
