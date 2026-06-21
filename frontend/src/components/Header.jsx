@@ -7,30 +7,22 @@ const languages = [
 ];
 
 function Header() {
-    const { t, i18n } = useTranslation();
+    const { i18n } = useTranslation();
     const currentLanguage = (i18n.resolvedLanguage || i18n.language || 'fr').slice(0, 2);
-
     const handleLanguageChange = (event) => {
         i18n.changeLanguage(event.target.value);
     };
-
     return (
-        <header className="poetry-header">
-            <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-5 md:px-6">
-                <a href="#hero" className="poetry-brand" aria-label={t('nav.home')}>
-                    {t('site.title')}
-                </a>
-
-                <nav className="hidden items-center gap-6 text-sm font-medium tracking-wide md:flex">
-                    <a href="#collection" className="poetry-link">{t('nav.collection')}</a>
-                    <a href="#manifest" className="poetry-link">{t('nav.manifest')}</a>
-                </nav>
-
-                <div className="flex items-center gap-3">
+        <header className="bg-blue-600 text-white shadow-lg">
+            <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+                <span className="text-2xl font-bold">
+                    Starter Kit
+                </span>
+                <div className="flex gap-4 items-center">
                     <select
                         value={currentLanguage}
                         onChange={handleLanguageChange}
-                        className="rounded-full border border-amber-100/40 bg-stone-900/60 px-3 py-1.5 text-sm text-amber-100 outline-none transition hover:border-amber-100/70"
+                        className="text-sm bg-blue-500 hover:bg-blue-400 px-2 py-1 rounded transition font-mono text-white"
                         title="Changer de langue"
                     >
                         {languages.map((language) => (

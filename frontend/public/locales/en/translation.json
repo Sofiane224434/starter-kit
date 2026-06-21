@@ -1,52 +1,61 @@
 {
-  "site": {
-    "title": "The Cabinet of Verse"
-  },
   "nav": {
     "home": "Home",
-    "collection": "Collection",
-    "manifest": "Manifest"
+    "dashboard": "Dashboard",
+    "email": "Email",
+    "login": "Sign in",
+    "register": "Sign up",
+    "logout": "Sign out"
   },
   "home": {
-    "kicker": "Living collection",
-    "title": "A place to publish poems that breathe.",
-    "subtitle": "Each text is displayed like a unique piece: clean, readable, and ready to share.",
-    "featured": "Featured poem",
-    "manifestTitle": "Studio manifesto",
-    "manifestText": "This website is designed to welcome new poems without friction. You can grow the collection over time and preserve an elegant archive of your voice."
+    "title": "Welcome to the Starter Kit",
+    "subtitle": "Modern React + Node.js + MySQL template",
+    "cta_start": "Get started",
+    "cta_login": "Sign in",
+    "cta_dashboard": "Go to Dashboard"
   },
-  "poems": {
-    "items": [
-      {
-        "title": "Ink Night",
-        "theme": "Nocturne",
-        "lines": [
-          "The moon folds its sheets above the roofs of town,",
-          "I let one word burn slowly where my seasons drown,",
-          "And silence writes beyond the edge of all my borders."
-        ]
-      },
-      {
-        "title": "Behind the Glass",
-        "theme": "City",
-        "lines": [
-          "The street glues neon light against my quiet face,",
-          "A bus carries the dawn with metal-scented grace,",
-          "I count the passersby the way we count the stars."
-        ]
-      },
-      {
-        "title": "Letter to Tomorrow",
-        "theme": "Hope",
-        "lines": [
-          "I hide a little sky inside my pocketed fears,",
-          "I learn to light a fire from old and patient tears,",
-          "Tomorrow knows my name among the waking windows."
-        ]
-      }
-    ]
+  "login": {
+    "title": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "loading": "Signing in...",
+    "no_account": "No account?",
+    "register_link": "Sign up"
+  },
+  "register": {
+    "title": "Create an account",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm password",
+    "submit": "Sign up",
+    "loading": "Creating account...",
+    "already_account": "Already have an account?",
+    "login_link": "Sign in"
+  },
+  "dashboard": {
+    "title": "Welcome {{name}}!",
+    "email_label": "Email :"
+  },
+  "email": {
+    "title": "Send an email",
+    "subtitle": "Test sending a transactional email via Brevo from the starter kit.",
+    "to": "Recipient",
+    "name": "Name (optional)",
+    "subject": "Subject",
+    "message": "Message",
+    "submit": "Send email",
+    "sending": "Sending...",
+    "success": "Email sent successfully",
+    "error": "Unable to send email"
+  },
+  "errors": {
+    "passwords_mismatch": "Passwords don't match",
+    "password_too_short": "Password must be at least 6 characters",
+    "login_error": "Sign in failed",
+    "register_error": "Registration failed"
   },
   "footer": {
-    "copyright": "© {{year}} The Cabinet of Verse"
+    "copyright": "© {{year}} Azim404"
   }
 }

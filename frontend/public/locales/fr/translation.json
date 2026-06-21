@@ -1,52 +1,61 @@
 {
-  "site": {
-    "title": "Le Cabinet des Vers"
-  },
   "nav": {
     "home": "Accueil",
-    "collection": "Collection",
-    "manifest": "Manifeste"
+    "dashboard": "Dashboard",
+    "email": "Email",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "logout": "Déconnexion"
   },
   "home": {
-    "kicker": "Recueil vivant",
-    "title": "Un lieu pour publier des poèmes qui respirent.",
-    "subtitle": "Chaque texte est expose comme une piece unique: sobre, lisible, et pret a etre partage.",
-    "featured": "Poeme a la une",
-    "manifestTitle": "Manifeste d'atelier",
-    "manifestText": "Ce site est pense pour accueillir de nouveaux poemes sans friction. Tu peux enrichir la collection au fil des jours et garder une archive elegante de ta voix."
+    "title": "Bienvenue sur le Starter Kit",
+    "subtitle": "Template moderne React + Node.js + MySQL",
+    "cta_start": "Commencer",
+    "cta_login": "Se connecter",
+    "cta_dashboard": "Accéder au Dashboard"
   },
-  "poems": {
-    "items": [
-      {
-        "title": "Nuit d'encre",
-        "theme": "Nocturne",
-        "lines": [
-          "La lune plie ses draps sur le toit des maisons,",
-          "Je laisse un mot bruler au bord de mes saisons,",
-          "Et le silence ecrit plus loin que mes frontieres."
-        ]
-      },
-      {
-        "title": "Derriere la vitre",
-        "theme": "Ville",
-        "lines": [
-          "La rue colle ses neons sur mon visage pale,",
-          "Un bus emporte l'aube et son parfum de metal,",
-          "Je compte les passants comme on compte des etoiles."
-        ]
-      },
-      {
-        "title": "Lettre a demain",
-        "theme": "Espoir",
-        "lines": [
-          "Je glisse un peu de ciel dans la poche de mes peurs,",
-          "J'apprends a faire un feu avec de vieilles douleurs,",
-          "Demain saura mon nom au milieu des fenetres."
-        ]
-      }
-    ]
+  "login": {
+    "title": "Se connecter",
+    "email": "Email",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "loading": "Connexion en cours...",
+    "no_account": "Pas de compte ?",
+    "register_link": "S'inscrire"
+  },
+  "register": {
+    "title": "Créer un compte",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
+    "submit": "S'inscrire",
+    "loading": "Inscription...",
+    "already_account": "Déjà un compte ?",
+    "login_link": "Se connecter"
+  },
+  "dashboard": {
+    "title": "Bienvenue {{name}} !",
+    "email_label": "Email :"
+  },
+  "email": {
+    "title": "Envoyer un email",
+    "subtitle": "Teste l'envoi d'un email transactionnel via Brevo depuis le starter kit.",
+    "to": "Destinataire",
+    "name": "Nom (optionnel)",
+    "subject": "Sujet",
+    "message": "Message",
+    "submit": "Envoyer l'email",
+    "sending": "Envoi en cours...",
+    "success": "Email envoyé avec succès",
+    "error": "Impossible d'envoyer l'email"
+  },
+  "errors": {
+    "passwords_mismatch": "Les mots de passe ne correspondent pas",
+    "password_too_short": "Le mot de passe doit contenir au moins 6 caractères",
+    "login_error": "Erreur de connexion",
+    "register_error": "Erreur lors de l'inscription"
   },
   "footer": {
-    "copyright": "© {{year}} Le Cabinet des Vers"
+    "copyright": "© {{year}} Azim404"
   }
 }

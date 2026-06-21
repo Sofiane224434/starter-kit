@@ -5,9 +5,7 @@
 [![Express](https://img.shields.io/badge/Express-5-lightgrey)](https://expressjs.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Starter kit moderne pour développer rapidement des applications web fullstack avec authentification JWT, i18n FR/EN, email transactionnel via Brevo, et traduction automatique DeepL.
-
-Cette version est adaptee en vitrine editoriale de poemes sur le frontend (landing page, collection de poemes et manifeste), tout en conservant la base technique fullstack.
+Starter kit moderne pour développer rapidement des applications web fullstack avec authentification JWT, i18n FR/EN, email transactionnel via Brevo, et traduction automatique DeepL. Le branding frontend est personnalise pour Azim404 (footer + lien externe).
 
 ## 📑 Table des Matières
 
@@ -57,12 +55,6 @@ npm run dev:frontend
 
 - **Backend** : http://localhost:5000
 - **Frontend** : http://localhost:5173
-
-### Personnaliser les poemes
-
-- Modifier la collection FR: `frontend/public/locales/fr/translation.json` -> `poems.items`
-- Modifier la collection EN: `frontend/public/locales/en/translation.json` -> `poems.items`
-- Les sections hero/manifeste se configurent aussi dans ces fichiers (`home.*`)
 
 ---
 
